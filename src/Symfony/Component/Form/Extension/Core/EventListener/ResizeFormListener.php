@@ -81,15 +81,17 @@ class ResizeFormListener implements EventSubscriberInterface
             $form->remove($name);
         }
 
-        $builder = $form->getConfig()->getFormFactory()->createNamedBuilder(
-            'child',
-            $this->type,
-            null,
-            array_replace($this->options, array('auto_initialize' => false))
-        );
+        $builder = null;
 
         // Then add all rows again in the correct order
         foreach ($data as $name => $value) {
+
+            $builder = $builder ?: $form->getConfig()->getFormFactory()->createNamedBuilder(
+                'child',
+                $this->type,
+                null,
+                array_replace($this->options, array('auto_initialize' => false))
+            );
 
             $builder->setName($name);
 
@@ -124,13 +126,28 @@ class ResizeFormListener implements EventSubscriberInterface
             }
         }
 
+        $builder = null;
+
         // Add all additional rows
         if ($this->allowAdd) {
             foreach ($data as $name => $value) {
                 if (!$form->has($name)) {
-                    $form->add($name, $this->type, array_replace(array(
-                        'property_path' => '['.$name.']',
-                    ), $this->options));
+
+                    $builder = $builder ?: $form->getConfig()->getFormFactory()->createNamedBuilder(
+                        'child',
+                        $this->type,
+                        null,
+                        array_replace($this->options, array('auto_initialize' => false))
+                    );
+
+                    $builder->setName($name);
+
+                    if (!isset($this->options['property_path'])) {
+
+                        $builder->setPropertyPath('['.$name.']');
+                    }
+
+                    $form->add($builder->getForm());
                 }
             }
         }

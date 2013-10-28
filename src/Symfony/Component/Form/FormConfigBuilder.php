@@ -627,6 +627,10 @@ class FormConfigBuilder implements FormConfigBuilderInterface
      */
     public function setName($name)
     {
+        if ($this->locked) {
+            throw new BadMethodCallException('FormConfigBuilder methods cannot be accessed anymore once the builder is turned into a FormConfigInterface instance.');
+        }
+
     	$this->name = $name;
     	return $this;
     }

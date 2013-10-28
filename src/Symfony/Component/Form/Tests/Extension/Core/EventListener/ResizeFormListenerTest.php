@@ -66,14 +66,10 @@ class ResizeFormListenerTest extends \PHPUnit_Framework_TestCase
         $this->form->add($this->getForm('0'));
         $this->form->add($this->getForm('1'));
 
-        $this->factory->expects($this->at(0))
-            ->method('createNamed')
-            ->with(1, 'text', null, array('property_path' => '[1]', 'max_length' => 10, 'auto_initialize' => false))
-            ->will($this->returnValue($this->getForm('1')));
-        $this->factory->expects($this->at(1))
-            ->method('createNamed')
-            ->with(2, 'text', null, array('property_path' => '[2]', 'max_length' => 10, 'auto_initialize' => false))
-            ->will($this->returnValue($this->getForm('2')));
+        $this->factory->expects($this->once())
+            ->method('createNamedBuilder')
+            ->with('child', 'text', null, array('max_length' => 10, 'auto_initialize' => false))
+            ->will($this->returnValue($this->getBuilder('child')));
 
         $data = array(1 => 'string', 2 => 'string');
         $event = new FormEvent($this->form, $data);
@@ -111,9 +107,9 @@ class ResizeFormListenerTest extends \PHPUnit_Framework_TestCase
         $this->form->add($this->getForm('0'));
 
         $this->factory->expects($this->once())
-            ->method('createNamed')
-            ->with(1, 'text', null, array('property_path' => '[1]', 'max_length' => 10, 'auto_initialize' => false))
-            ->will($this->returnValue($this->getForm('1')));
+            ->method('createNamedBuilder')
+            ->with('child', 'text', null, array('max_length' => 10, 'auto_initialize' => false))
+            ->will($this->returnValue($this->getBuilder('child')));
 
         $data = array(0 => 'string', 1 => 'string');
         $event = new FormEvent($this->form, $data);
