@@ -41,6 +41,15 @@ interface FormConfigBuilderInterface extends FormConfigInterface
     public function addEventSubscriber(EventSubscriberInterface $subscriber);
 
     /**
+     * 
+     * Sets the name of the form used as HTTP parameter.
+     * 
+     * @param string The form name.
+     * @return self The configuration object.
+     */
+    public function setName($name);
+
+    /**
      * Appends / prepends a transformer to the view transformer chain.
      *
      * The transform method of the transformer is used to convert data from the

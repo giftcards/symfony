@@ -81,11 +81,24 @@ class ResizeFormListener implements EventSubscriberInterface
             $form->remove($name);
         }
 
+        $builder = $form->getConfig()->getFormFactory()->createNamedBuilder(
+            'child',
+            $this->type,
+            null,
+            array_replace($this->options, array('auto_initialize' => false))
+        );
+
         // Then add all rows again in the correct order
         foreach ($data as $name => $value) {
-            $form->add($name, $this->type, array_replace(array(
-                'property_path' => '['.$name.']',
-            ), $this->options));
+
+            $builder->setName($name);
+
+            if (!isset($this->options['property_path'])) {
+
+                $builder->setPropertyPath('['.$name.']');
+            }
+
+            $form->add($builder->getForm());
         }
     }
 

@@ -625,6 +625,15 @@ class FormConfigBuilder implements FormConfigBuilderInterface
     /**
      * {@inheritdoc}
      */
+    public function setName($name)
+    {
+    	$this->name = $name;
+    	return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setErrorBubbling($errorBubbling)
     {
         if ($this->locked) {
